@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EMBEDDED SYSTEM</title>
+</head>
+<body>
+
+<h1>Documentation </h1>
+<p>My name is Victoria Njoki.Documeting on what i learned on the embedded system course.Overview on module one introduction fo the kit to me that had the following.</p>
+<h2>WEEK 1</h2>
+<p>Research on the GPIOS found out tha there was 40 pins.</p>
+<p>Installation of Thonny IDE and micropython.</p>
+<img src="https://pico.raspi.vom-kuhberg.de/_img/raspi_pico_pinout.gif" alt="raspi_pico_pinout" width="104" height="142">
+<p>Learn basis on using Thonny,commands and the shell.Noted that the RPI has the communication protocals.By write a code to blink the on board LED(gpio 25) the following commands were introduced.</p>
+<code>from machine import Pin<br>
+    from time import sleep<br>
+    
+    led = Pin(25,Pin.OUT)<br>
+
+    while True:<br>
+        &nbsp;led.on()<br>
+        &nbsp;sleep(1)<br>
+        &nbsp;led.off()<br>
+        &nbsp;sleep(1)<br>
+    
+    </code>
+    
+<p>Further, I was able to introduce an external LED</p>
+    <code>from machine import Pin<br>
+        from time import sleep<br>
+    
+        led = Pin(16, Pin.OUT)<br>
+
+        while True:<br>
+        led.on()<br>
+        sleep(1)<br>
+        led.off()<br>
+        sleep(1)<br>
+
+    </code>
+<img src="img/Ex.LED.jpg" alt="led image" width="104" height="142">
+</body>
+</html>
