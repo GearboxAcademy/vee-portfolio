@@ -197,6 +197,7 @@ while True:<br>
 
 </code>
 <img src="OLED.jpg" alt="OLED display" width="150" length="150">
+<a href="">Visit W3Schools.com!</a>
 <p>Threebinary_counter interfacing with OLED</p>
 <code>
 from machine import Pin, SPI<br>
@@ -294,8 +295,112 @@ while True:<br>
     green = Pin(11, Pin.OUT)<br>
 
 <video width="320" height="240" controls>
-    <source src="binarycounter.mp4" type="binary lights" alt="threebit_counter">
+    <source src="binarycounter.mp4" "type="binary lights" alt="threebit_counter">
+    
     Your browser does not support the video tag.
 </video>
+<h4>MODULE 4</h4>
+<h5>Microcontroller programming and access system control</h5>
+<P>For this module ESP wroom32 that has both access to bluetooth and wifi connection.Serial communication protocal which is the UART,SPI and i2c.It has 38 pins 3 grounds and two ADC pins used as a  Transmitter(TX) and Receiver(RX).Serial communication for the ESP32 where transfer of data can be series and parallel where he bits are either single or multiple.Sychronous serail where bits use the clock signal while asychronous no external clock signal. </P>
+<p>SPI meaning Serial Periphal Interfaces.It uses separate clock and data lines, along with a select line to choose the device you wish to talk to.</p>
+<h6>Baud rate </h6>
+<p>The baud rate specifies how fast data is sent over a serial line. It's usually expressed in units of bits-per-second (bps).Then speed rane is always between 1200-115200.I2C meaning Inter-intergrated circuit where communication of two digital circuits chips allowed to communicate this includes SCL(Serial clock signal) and SDL(serial data).</p>
+<img src="ESPwroom32.png" alt="ESPwroom32" width="140" length="142".>
+<p>ESP32 also works the same as raspberry pi pico,onboard LED is given a particular code and blinks.The ESP32 uses the Arduino IDE software to code.The following is the code that i wrote for the onboard LED. </p>
+<code>int ledPin = 2;<br>
+
+    void setup() {<br>
+      pinMode(ledPin, OUTPUT);<br>
+    }<br>
+    
+    void loop() {<br>
+      digitalWrite(ledPin, HIGH);<br>
+      delay(500);<br>
+      digitalWrite(ledPin, LOW);<br>
+      delay(500);<br>
+    }<br>
+    </code>
+<p>Traffic lights and binaty counter with ESP32.</p>
+<code>
+    int red = 2;<br>
+int amber = 4;<br>
+int green = 5;<br>
+
+void setup() {><br>
+
+  Serial.begin(115200);<br>
+  pinMode(red,OUTPUT);<br>
+  pinMode(amber,OUTPUT);<br>
+  pinMode(green,OUTPUT);<br>
+}<br>
+
+void loop() {<br>
+ digitalWrite(red, HIGH);<br>
+ Serial.println("RED HIGH"); <br>
+  delay(100);<br>
+  digitalWrite(red,LOW);<br>
+  Serial.println("RED LOW");<br> 
+delay(100);<br>
+
+digitalWrite(amber, HIGH);<br>
+ Serial.println("AMBER HIGH"); <br>
+  delay(100);<br>
+  digitalWrite(amber,LOW);<br>
+  Serial.println("AMBER LOW");<br>
+delay(100);<br>
+
+digitalWrite(green, HIGH);<br>
+ Serial.println("GREEN HIGH");<br> 
+  delay(100);<br>
+  digitalWrite(green,LOW);<br>
+  Serial.println("GREEN LOW"); <br>
+delay(100);<br>
+
+}<br>
+</code>
+<p>Researched further, found out ESP32 can be used with other IoT devices such as LoRa.ESP32 needs a libraries files that are found in Tool-manage libraries then install.</p>
+<p>Interfacing the ESP32 with the oled display.Adafruit _GFX for graphics and Adafruit_SSD1306.</p>
+<code>
+    #include <SPI.h><br>
+        #include <Wire.h><br>
+        #include <Adafruit_GFX.h><br>
+        #include <Adafruit_SSD1306.h><br>
+        
+        #define SCREEN_WIDTH 128<br>
+        #define SCREEN_HEIGHT 64<br>
+        
+        #define OLED_MOSI   23<br>
+        #define OLED_CLK    18<br>
+        #define OLED_DC     16<br>
+        #define OLED_CS     5<br>
+        #define OLED_RESET  17<br>
+        
+        Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT,<br>
+          OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);<br>
+        
+        void setup() {<br>
+          Serial.begin(115200);<br>
+        
+          if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64<br>
+            Serial.println(F("SSD1306 allocation failed"));<br>
+            for(;;);<br>
+          }<br>
+          delay(2000);<br>
+          display.clearDisplay();<br>
+        
+          display.setTextSize(1);<br>
+          display.setTextColor(WHITE);<br>
+          display.setCursor(0, 10);<br>
+          // Display static text<br>
+          display.println("Hello, world!");<br>
+          display.display();<br> 
+        }<br>
+        
+        void loop() {<br>
+          
+        }<br>
+</code>
+<img src="oledwith esp32.jpg" alt="esp32oled" width="150" length="142">
+   
 </body>
 </html>
