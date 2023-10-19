@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EMBEDDED SYSTEM</title>
+</head>
+<body>
+
+<h1>Documentation </h1>
+<p>My name is Victoria Njoki.Documeting on what i learned on the embedded system course.Overview on module one introduction fo the kit to me that had the following.</p>
+<h2>WEEK 1</h2>
+<p>Research on the GPIOS found out tha there was 40 pins.</p>
+<p>Installation of Thonny IDE and micropython.</p>
+<img src="https://pico.raspi.vom-kuhberg.de/_img/raspi_pico_pinout.gif" alt="raspi_pico_pinout" width="104" height="142">
+<p>Learn basis on using Thonny,commands and the shell.Noted that the RPI has the communication protocals for everycode to be save as (name.py).By write a code to blink the on board LED(gpio 25) the following commands were introduced.</p>
+<code>from machine import Pin<br>
+    from time import sleep<br>
+    
+    led = Pin(25,Pin.OUT)<br>
+
+    while True:<br>
+        &nbsp;led.on()<br>
+        &nbsp;sleep(1)<br>
+        &nbsp;led.off()<br>
+        &nbsp;sleep(1)<br>
+    
+    </code>
+    
+<p>Further, I was able to introduce an external LED</p>
+    <code>from machine import Pin<br>
+        from time import sleep<br>
+    
+        led = Pin(16, Pin.OUT)<br>
+
+        while True:<br>
+        led.on()<br>
+        sleep(1)<br>
+        led.off()<br>
+        sleep(1)<br>
+
+    </code>
+<img src="img/Ex.LED.jpg" alt="led image" width="104" height="142">
+<h3>WEEK 2</h3>
+<h4>Module II</h4>
+<p>For this module,learned about electric circuit principles where button switch,buzzers,PWM,Potentiometer and LED's whereby interfacing each component.Used each spreadsheet to have a better understanding on the components.Resistors used pull up for the current value to be 1V for the loop and pull down to be 0v.Potential divider to know the voltage in each loop,the impendance and current limiting.</p>
+<p>Interfacing a LED with a button switch</p>
+<code>from machine import Pin<br>
+    import time<br>
+    
+    led = Pin(15, Pin.OUT)<br>
+    button = Pin(14, Pin.IN, Pin.PULL_DOWN)<br>
+    
+    while True:<br>
+        if button.value():<br>
+            led.toggle()<br>
+            time.sleep(0.5)<br>
+        </code>
+<img src="buttonled.jpg" alt="button.led" width="104" height="142">
+<p>Interfacing a LED with a potentiometer to vary the brightness which is an analogue input.</p> 
+<video width="320" height="240" controls>
+    <source src="video1.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video> 
+<p>Projects done after incorporating the components was traffic and binary lights.Traffic lights uisng a Red,Amber and Green LED's while for binary counter(3^2) threebit_counter.</p>  
+<p>Traffic light</p> 
+<code>
+    from machine import Pin<br>
+from time import sleep<br>
+ 
+# traffict lights(red, amber, green)<br>
+red = Pin(13,Pin.OUT)<br>
+amber = Pin(14,Pin.OUT)<br>
+green = Pin(15,Pin.OUT)<br>
+
+while True:<br>
+    &nbsp;gred.on()<br>
+    &nbsp;amber.off()<br>
+    &nbsp;green.off()<br>
+    &nbsp;sleep(.5)<br>
+    
+    &nbsp;red.off()<br>
+    &nbsp;amber.on()<br>
+    &nbsp;green.off()<br>
+    &nbsp;sleep(.5)<br>
+    
+    &nbsp;red.off()<br>
+    &nbsp;amber.off()<br>
+    &nbsp;green.on()<br>
+    &nbsp;sleep(.5)<br>
+
+    <video width="320" height="240" controls>
+        <source src="trafficlights.mp4" type="video/mp4" alt="ledtraffic.lights">
+        Your browser does not support the video tag.
+      </video>
+
+<p>three binary counter</p>
+<code>
+from machine import Pin<br>
+from time import sleep<br>
+
+red = Pin(15, Pin.OUT)<br>
+amber = Pin(13, Pin.OUT)<br>
+green = Pin(11, Pin.OUT)<br>
+
+while True:<br>
+
+    red.off()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+    amber.off()<br>
+    red.off()<br>
+    green.on()<br>
+    sleep(1)<br>
+    
+    red.off()<br>
+    amber.off()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    
+    red.off()<br>
+    amber.on()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    
+    red.on()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+
+
+    red.on()<br>
+    amber.on()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+
+    red.on()<br>
+    amber.off()<br>
+    green.on()<br>
+     sleep(.1)<br>
+    
+
+    red.on()<br>
+    amber.on()<br>
+    green.on()<br>
+
+</code>
+<video width="320" height="240" controls>
+    <source src="binarycounter.mp4" "type="threebitcounter" alt="threecounter">
+     Your browser does not support the video tag.
+  </video>
+<p>Also,Sensors and actuators where introduced whereby the sensor is a device that produces an output signal for the purpose of sensing a physical phenomenon and an actuator a component of a machine that produces force, torque, or displacement, usually in a controlled way, when an electrical, pneumatic or hydraulic input is supplied to it in a system (called an actuating system).The sensors introduced where ULTRASONIC sensor (HCSR401) and PIR.The HC-SR401 working principle is to emmit a high frequecy signal that is beyond the human hearing(echo) where the transmitter does and the receiver bounces back using a 30 degree angle(trigger).</p>
+<p>The HC-SR401 has 4 pins containing the Vcc, Echo, Trigger and Ground.Below image:</p>
+<img src="HC-SR04.webp" alt="Ultrassonic.image" width="150" height="142">
+<p>Simulation code </p>
+<code> 
+    from machine import Pin<br>
+from time import sleep<br>
+
+trigger = Pin(3, Pin.OUT)<br>
+echo = Pin(2, Pin.IN)<br>
+
+def ultra():<br>
+    trigger.low()<br>
+    sleep(2)<br>
+    trigger.high()<br>
+    sleep(2)<br>
+    trigger.low()<br>
+    while echo.value() == 0:<br>
+        signaloff = ticks_us()<br>
+    while echo.value() == 1:<br>
+        signalon = ticks_us()<br>
+        timepassed = signalon - signaloff<br>
+        distance = (timepassed * 0.0343) / 2<br>
+        print("The distance from the objects is",distance,"cm")<br>
+
+while True:<br>
+    ultra()<br>
+    sleep(1)<br>
+    
+</code>
+<img src="ultrasonic.jpg" alt="RPI.ultrasonic" width="140" length="140"> 
+<p>Went further for the assignment when oled was used in combo to display the binary counter.For the OLED to be used a Library was install (SSD1306).</p>
+<code>
+    from machine import Pin, SPI<br>
+from time import sleep<br>
+import framebuf<br>
+from ssd1306 import SSD1306_SPI<br>
+
+spi = SPI(0, 100000, mosi=Pin(19), sck=Pin(18))<br>
+oled = SSD1306_SPI(128, 64, spi, Pin(17), Pin(20), Pin(16))<br>
+
+while True:<br>
+    oled.text("Hello Victoria",10,28)<br>
+    oled.show()<br>
+
+</code>
+<img src="OLED.jpg" alt="OLED display" width="150" length="150">
+<a href="">Visit W3Schools.com!</a>
+<p>Threebinary_counter interfacing with OLED</p>
+<code>
+from machine import Pin, SPI<br>
+from time import sleepfrom machine import Pin, SPIfrom machine import Pin, SPI<br>
+from time import sleep<br>
+import framebuf<br>
+from ssd1306 import SSD1306_SPI<br>
+
+red = Pin(15, Pin.OUT)<br>
+amber = Pin(13, Pin.OUT)<br>
+green = Pin(11, Pin.OUT)<br>
+
+spi = SPI(0, 100000, mosi=Pin(19), sck=Pin(18))<br>
+oled = SSD1306_SPI(128, 64, spi, Pin(17),Pin(20), Pin(16))<br>
+
+while True:<br>
+    oled.text("counter 0",30,28)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    amber.off()<br>
+    red.off()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    oled.text("counter 1",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.off()<br>
+    green.on()<br>
+    oled.text("counter 2",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.on()<br>
+    green.on()<br>
+    oled.text("counter 3",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.off()<br>
+    green.off()<br>
+    oled.text("counter 4",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+   
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.on()<br>
+    green.off()<br>
+    oled.text("counter 5",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.off()<br>
+    green.on()<br>
+    oled.text("counter 6",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    
+
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.on()<br>
+    green.on()<br>
+    oled.text("counter 7",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    from machine import Pin, SPI<br>
+    from time import sleep<br>
+    import framebuf<br>
+    from ssd1306 import SSD1306_SPI<br>
+    
+    red = Pin(15, Pin.OUT)<br>
+    amber = Pin(13, Pin.OUT)<br>
+    green = Pin(11, Pin.OUT)<br>
+
+<video width="320" height="240" controls>
+    <source src="binarycounter.mp4" "type="binary lights" alt="threebit_counter">
+    
+    Your browser does not support the video tag.
+</video>
+<h4>MODULE 4</h4>
+<h5>Microcontroller programming and access system control</h5>
+<P>For this module ESP wroom32 that has both access to bluetooth and wifi connection.Serial communication protocal which is the UART,SPI and i2c.It has 38 pins 3 grounds and two ADC pins used as a  Transmitter(TX) and Receiver(RX).Serial communication for the ESP32 where transfer of data can be series and parallel where he bits are either single or multiple.Sychronous serail where bits use the clock signal while asychronous no external clock signal. </P>
+<p>SPI meaning Serial Periphal Interfaces.It uses separate clock and data lines, along with a select line to choose the device you wish to talk to.</p>
+<h6>Baud rate </h6>
+<p>The baud rate specifies how fast data is sent over a serial line. It's usually expressed in units of bits-per-second (bps).Then speed rane is always between 1200-115200.I2C meaning Inter-intergrated circuit where communication of two digital circuits chips allowed to communicate this includes SCL(Serial clock signal) and SDL(serial data).</p>
+<img src="ESPwroom32.png" alt="ESPwroom32" width="140" length="142".>
+<p>ESP32 also works the same as raspberry pi pico,onboard LED is given a particular code and blinks.The ESP32 uses the Arduino IDE software to code.The following is the code that i wrote for the onboard LED. </p>
+<code>int ledPin = 2;<br>
+
+    void setup() {<br>
+      pinMode(ledPin, OUTPUT);<br>
+    }<br>
+    
+    void loop() {<br>
+      digitalWrite(ledPin, HIGH);<br>
+      delay(500);<br>
+      digitalWrite(ledPin, LOW);<br>
+      delay(500);<br>
+    }<br>
+    </code>
+<p>Traffic lights and binaty counter with ESP32.</p>
+<code>
+    int red = 2;<br>
+int amber = 4;<br>
+int green = 5;<br>
+
+void setup() {><br>
+
+  Serial.begin(115200);<br>
+  pinMode(red,OUTPUT);<br>
+  pinMode(amber,OUTPUT);<br>
+  pinMode(green,OUTPUT);<br>
+}<br>
+
+void loop() {<br>
+ digitalWrite(red, HIGH);<br>
+ Serial.println("RED HIGH"); <br>
+  delay(100);<br>
+  digitalWrite(red,LOW);<br>
+  Serial.println("RED LOW");<br> 
+delay(100);<br>
+
+digitalWrite(amber, HIGH);<br>
+ Serial.println("AMBER HIGH"); <br>
+  delay(100);<br>
+  digitalWrite(amber,LOW);<br>
+  Serial.println("AMBER LOW");<br>
+delay(100);<br>
+
+digitalWrite(green, HIGH);<br>
+ Serial.println("GREEN HIGH");<br> 
+  delay(100);<br>
+  digitalWrite(green,LOW);<br>
+  Serial.println("GREEN LOW"); <br>
+delay(100);<br>
+
+}<br>
+</code>
+<p>Researched further, found out ESP32 can be used with other IoT devices such as LoRa.ESP32 needs a libraries files that are found in Tool-manage libraries then install.</p>
+<p>Interfacing the ESP32 with the oled display.Adafruit _GFX for graphics and Adafruit_SSD1306.</p>
+<code>
+    #include <SPI.h><br>
+        #include <Wire.h><br>
+        #include <Adafruit_GFX.h><br>
+        #include <Adafruit_SSD1306.h><br>
+        
+        #define SCREEN_WIDTH 128<br>
+        #define SCREEN_HEIGHT 64<br>
+        
+        #define OLED_MOSI   23<br>
+        #define OLED_CLK    18<br>
+        #define OLED_DC     16<br>
+        #define OLED_CS     5<br>
+        #define OLED_RESET  17<br>
+        
+        Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT,<br>
+          OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);<br>
+        
+        void setup() {<br>
+          Serial.begin(115200);<br>
+        
+          if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64<br>
+            Serial.println(F("SSD1306 allocation failed"));<br>
+            for(;;);<br>
+          }<br>
+          delay(2000);<br>
+          display.clearDisplay();<br>
+        
+          display.setTextSize(1);<br>
+          display.setTextColor(WHITE);<br>
+          display.setCursor(0, 10);<br>
+          // Display static text<br>
+          display.println("Hello, world!");<br>
+          display.display();<br> 
+        }<br>
+        
+        void loop() {<br>
+          
+        }<br>
+</code>
+<img src="oledwith esp32.jpg" alt="esp32oled" width="150" length="142">
+   
+</body>
+</html>
