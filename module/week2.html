@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vee</title>
+    <link rel="stylesheet" href="style/project.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet">
+</head>
+
+<h3>WEEK 2</h3>
+<h4>Module 2</h4>
+<p>For this module,learned about electric circuit principles where button switch,buzzers,PWM,Potentiometer and LED's whereby interfacing each component.Used each spreadsheet to have a better understanding on the components.Resistors used pull up for the current value to be 1V for the loop and pull down to be 0v.Potential divider to know the voltage in each loop,the impendance and current limiting.</p>
+<p>Interfacing a LED with a button switch</p>
+<code>from machine import Pin<br>
+    import time<br>
+    
+    led = Pin(15, Pin.OUT)<br>
+    button = Pin(14, Pin.IN, Pin.PULL_DOWN)<br>
+    
+    while True:<br>
+        if button.value():<br>
+            led.toggle()<br>
+            time.sleep(0.5)<br>
+        </code>
+<img src="media/buttonled.jpg" alt="button.led" width="104" height="142">
+<p>Interfacing a LED with a potentiometer to vary the brightness which is an analogue input.</p> 
+<video width="320" height="240" controls>
+    <source src="../media/videos/video1.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video> 
+<p>Projects done after incorporating the components was traffic and binary lights.Traffic lights uisng a Red,Amber and Green LED's while for binary counter(3^2) threebit_counter.</p>  
+<p>Traffic light</p> 
+<code>
+    from machine import Pin<br>
+from time import sleep<br>
+ 
+# traffict lights(red, amber, green)<br>
+red = Pin(13,Pin.OUT)<br>
+amber = Pin(14,Pin.OUT)<br>
+green = Pin(15,Pin.OUT)<br>
+
+while True:<br>
+    &nbsp;gred.on()<br>
+    &nbsp;amber.off()<br>
+    &nbsp;green.off()<br>
+    &nbsp;sleep(.5)<br>
+    
+    &nbsp;red.off()<br>
+    &nbsp;amber.on()<br>
+    &nbsp;green.off()<br>
+    &nbsp;sleep(.5)<br>
+    
+    &nbsp;red.off()<br>
+    &nbsp;amber.off()<br>
+    &nbsp;green.on()<br>
+    &nbsp;sleep(.5)<br>
+
+    <video width="320" height="240" controls>
+        <source src="../media/videos/video1.mp4" type="video/mp4" alt="ledtraffic.lights">
+        Your browser does not support the video tag.
+      </video>
+
+<p>three binary counter</p>
+<code>
+from machine import Pin<br>
+from time import sleep<br>
+
+red = Pin(15, Pin.OUT)<br>
+amber = Pin(13, Pin.OUT)<br>
+green = Pin(11, Pin.OUT)<br>
+
+while True:<br>
+
+    red.off()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+    amber.off()<br>
+    red.off()<br>
+    green.on()<br>
+    sleep(1)<br>
+    
+    red.off()<br>
+    amber.off()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    
+    red.off()<br>
+    amber.on()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    
+    red.on()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+
+
+    red.on()<br>
+    amber.on()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+
+    red.on()<br>
+    amber.off()<br>
+    green.on()<br>
+     sleep(.1)<br>
+    
+
+    red.on()<br>
+    amber.on()<br>
+    green.on()<br>
+
+</code>
+<video width="320" height="240" controls>
+    <source src="../media/videos/binarycounter.mp4" "type="threebitcounter" alt="threecounter">
+     Your browser does not support the video tag.
+  </video>
+<p>Also,Sensors and actuators where introduced whereby the sensor is a device that produces an output signal for the purpose of sensing a physical phenomenon and an actuator a component of a machine that produces force, torque, or displacement, usually in a controlled way, when an electrical, pneumatic or hydraulic input is supplied to it in a system (called an actuating system).The sensors introduced where ULTRASONIC sensor (HCSR401) and PIR.The HC-SR401 working principle is to emmit a high frequecy signal that is beyond the human hearing(echo) where the transmitter does and the receiver bounces back using a 30 degree angle(trigger).</p>
+<p>The HC-SR401 has 4 pins containing the Vcc, Echo, Trigger and Ground.Below image:</p>
+<img src="../media/images/HC-SR04.webp" alt="Ultrassonic.image" width="150" height="142">
+<p>Simulation code </p>
+<code> 
+    from machine import Pin<br>
+from time import sleep<br>
+
+trigger = Pin(3, Pin.OUT)<br>
+echo = Pin(2, Pin.IN)<br>
+
+def ultra():<br>
+    trigger.low()<br>
+    sleep(2)<br>
+    trigger.high()<br>
+    sleep(2)<br>
+    trigger.low()<br>
+    while echo.value() == 0:<br>
+        signaloff = ticks_us()<br>
+    while echo.value() == 1:<br>
+        signalon = ticks_us()<br>
+        timepassed = signalon - signaloff<br>
+        distance = (timepassed * 0.0343) / 2<br>
+        print("The distance from the objects is",distance,"cm")<br>
+
+while True:<br>
+    ultra()<br>
+    sleep(1)<br>
+    
+</code>
+<img src="../media/images/ultrasonic.jpg" alt="RPI.ultrasonic" width="140" length="140"> 
+<p>Went further for the assignment when oled was used in combo to display the binary counter.For the OLED to be used a Library was install (SSD1306).</p>
+<code>
+    from machine import Pin, SPI<br>
+from time import sleep<br>
+import framebuf<br>
+from ssd1306 import SSD1306_SPI<br>
+
+spi = SPI(0, 100000, mosi=Pin(19), sck=Pin(18))<br>
+oled = SSD1306_SPI(128, 64, spi, Pin(17), Pin(20), Pin(16))<br>
+
+while True:<br>
+    oled.text("Hello Victoria",10,28)<br>
+    oled.show()<br>
+
+</code>
+<img src="../media/images/OLED-AHT10.jpg" alt="OLED display" width="150" length="150">
+<p>Threebinary_counter interfacing with OLED</p>
+<code>
+from machine import Pin, SPI<br>
+from time import sleepfrom machine import Pin, SPIfrom machine import Pin, SPI<br>
+from time import sleep<br>
+import framebuf<br>
+from ssd1306 import SSD1306_SPI<br>
+
+red = Pin(15, Pin.OUT)<br>
+amber = Pin(13, Pin.OUT)<br>
+green = Pin(11, Pin.OUT)<br>
+
+spi = SPI(0, 100000, mosi=Pin(19), sck=Pin(18))<br>
+oled = SSD1306_SPI(128, 64, spi, Pin(17),Pin(20), Pin(16))<br>
+
+while True:<br>
+    oled.text("counter 0",30,28)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.off()<br>
+    green.off()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    amber.off()<br>
+    red.off()<br>
+    green.on()<br>
+    sleep(.1)<br>
+    oled.text("counter 1",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.off()<br>
+    green.on()<br>
+    oled.text("counter 2",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.off()<br>
+    amber.on()<br>
+    green.on()<br>
+    oled.text("counter 3",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.off()<br>
+    green.off()<br>
+    oled.text("counter 4",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+   
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.on()<br>
+    green.off()<br>
+    oled.text("counter 5",30,28)<br>
+    oled.show()<br>
+    sleep(.1)<br>
+    
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.off()<br>
+    green.on()<br>
+    oled.text("counter 6",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    
+
+    oled.fill(0)<br>
+    oled.show()<br>
+    red.on()<br>
+    amber.on()<br>
+    green.on()<br>
+    oled.text("counter 7",30,28)<br>
+    oled.show()<br>
+    sleep(1)<br>
+    from machine import Pin, SPI<br>
+    from time import sleep<br>
+    import framebuf<br>
+    from ssd1306 import SSD1306_SPI<br>
+    
+    red = Pin(15, Pin.OUT)<br>
+    amber = Pin(13, Pin.OUT)<br>
+    green = Pin(11, Pin.OUT)<br>
+
+<video width="320" height="240" controls>
+    <source src="../media/videos/binarycounter.mp4" "type="binary lights" alt="threebit_counter">
+    
+    Your browser does not support the video tag.
+</video>
+</html>

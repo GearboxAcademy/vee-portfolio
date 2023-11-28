@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vee</title>
+    <link rel="stylesheet" href="style/project.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet">
+</head>
+
+<h>Module 1 Projects</h><br>
+
+<p>TRAFFIC LIGHT (PEDESTRIAN)</p>
+<p>https://docs.google.com/presentation/d/1inthOcZ7DzixJDXrk2IdGKU_dLRDTP0ZsG1AlefEO5o/edit?usp=sharing</p>
+<p>For the project i used Raspberry pico because of the wide range of GPIO pins that function almost the same.</p>
+<code>
+from machine import Pin,SPI<br>
+from utime import sleep<br>
+import framebuf<br>
+from ssd1306 import SSD1306_SPI<br>
+
+button = Pin(1, Pin.IN, Pin.PULL_UP)<br>  
+red = Pin(6, Pin.OUT)<br>
+amber = Pin(7, Pin.OUT)<br>
+green = Pin(9, Pin.OUT)#0 means that the light is currently off<br>
+spi = SPI(0, 100000, mosi=Pin(19), sck=Pin(18))<br>
+oled = SSD1306_SPI(128, 64, spi, Pin(17), Pin(20), Pin(16))<br>
+
+if __name__ == '__main__':<br>
+    while True:<br>
+        print(button.value())<br>
+        if button.value() == 1:<br>    #key press             
+            red.on()<br>
+            amber.off()<br>
+            green.off()<br>
+            for stop in range(10):<br>
+                sleep(1)<br>
+                oled.fill(0)<br>
+                oled.text("CARS STOP",20,15)<br>
+                oled.text(str(stop),55,35)<br>
+                oled.show()<br>
+            
+            red.off()<br>
+            amber.on()<br>
+            green.off()<br>
+            for ready in range(5):<br>
+                sleep(1)<br>
+                oled.fill(0)<br>
+                oled.text("CARS READY",20,15)<br>
+                oled.text(str(ready),55,35)<br>
+                oled.show()<br>
+           
+           
+            red.off()<br>
+            amber.off()<br>
+            green.on()<br>
+            for moving in range(10):<br>
+                sleep(1)<br>
+                oled.fill(0)<br>
+                oled.text("CARS MOVING",20,15)<br>
+                oled.text(str(moving),55,35)<br>
+                oled.show()<br><br><br><br><br><br><br><br><br>
+     
+        else:<br>
+            red.on()<br>
+            for ped in range(10):<br>
+                sleep(1)<br>
+                oled.fill(0)<br>
+                oled.text("PED MOVING",20,15)<br>
+                oled.text(str(ped),55,35)<br>
+                oled.show()<br>
+</code>
+<p>https://docs.google.com/presentation/d/1inthOcZ7DzixJDXrk2IdGKU_dLRDTP0ZsG1AlefEO5o/edit?usp=sharing</p>
+
+<h>CAR DETECTION SYSTEM</h>
+<p>For this project i used ESP32WROOM compactible with RFID and its easier to work with.</p>
+<code>
+    #include <MFRC522.h><br>
+        #include <ESP32Servo.h><br>
+        
+        Servo servo;<br>
+        
+        #define SS_PIN    5<br>  // ESP32 pin GPIO5 
+        #define RST_PIN   0 <br>// ESP32 pin GPIO27 
+        #define SERVO_PIN 26 <br>// ESP32 pin GPIO26 connected to Servo Motor's pin
+        MFRC522 rfid(SS_PIN, RST_PIN);<br>
+        #define sensor 2 <br>// ESP32 pin GPIO18 connected to OUT pin of IR obstacle avoidance sensor
+        #define red 12<br>
+        #define green 13<br>
+         
+        byte adminUID[4] = {0x60, 0x79, 0xC5, 0x14};<br>
+        byte visitorUID[4] = {0x59, 0x47, 0xA3, 0x18};<br>
+        
+        void setup() {<br>
+          Serial.begin(9600);<br>
+          SPI.begin(); // init SPI bus<br>
+          rfid.PCD_Init(); // init MFRC522<br>
+          SPI.begin(); // Init SPI bus<br>
+          Serial.println("Tap an RFID/NFC tag on the RFID-RC522 reader");<br>
+          servo.attach(SERVO_PIN, 500, 2400);<br>
+          pinMode(sensor, INPUT);<br>
+          pinMode(green,OUTPUT);<br>
+          pinMode(red,OUTPUT);<br>
+        }<br>
+        
+        void loop(){<br>
+          int pos = 0;<br>
+          bool value = digitalRead(sensor);<br>
+           if (rfid.PICC_IsNewCardPresent()) {<br> // new tag is available<br>
+            if (rfid.PICC_ReadCardSerial()) {<br> // NUID has been readed
+              MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);<br>
+              if (rfid.uid.uidByte[0] == adminUID[0] &&<br>
+                  rfid.uid.uidByte[1] == adminUID[1] &&<br>
+                  rfid.uid.uidByte[2] == adminUID[2] &&<br>
+                  rfid.uid.uidByte[3] == adminUID[3] ) {<br>
+                    Serial.println("Access is granted to admin");<br>
+                    if(value == 0){<br>
+                      digitalWrite(green, HIGH);<br>
+                      digitalWrite(red, LOW);<br>
+                      for (pos = 0; pos <= 270; pos += 1) { //pos <= 90; pos += 1<br>
+                      servo.write(pos);<br>
+                      delay(15);<br>
+                      }<br>
+                      digitalWrite(green, LOW);<br>
+                      digitalWrite(red, HIGH);<br>
+                    }<br>
+                    else<br>
+                    {<br>
+                        digitalWrite(green, LOW);<br>
+                        digitalWrite(red, LOW);<br>
+                    for (pos = 270; pos >= 0; pos -= 1) {<br>
+                    servo.write(pos);<br>
+                    delay(50);<br>
+                    }<br>
+                  }<br>
+                    
+                  }<br>
+                  
+                  else if (rfid.uid.uidByte[0] == visitorUID[0] &&<br>
+                  rfid.uid.uidByte[1] == visitorUID[1] &&<br>
+                  rfid.uid.uidByte[2] == visitorUID[2] &&<br>
+                  rfid.uid.uidByte[3] == visitorUID[3] ) {<br>
+                    Serial.println("Access is granted to visitor");<br>
+                    if(value == 0){<br>
+                      digitalWrite(green,LOW );<br>
+                      digitalWrite(red, HIGH);<br>
+                      for (pos = 0; pos <= 270; pos += 1) { //pos <= 90; pos += 1<br>
+                      servo.write(pos);<br>
+                      delay(10);<br>
+                      }<br>
+                      digitalWrite(green, LOW);<br>
+                      digitalWrite(red, HIGH);<br>
+                    }<br>
+                    else<br>
+                    {<br>
+                        digitalWrite(green, HIGH);<br>
+                        digitalWrite(red, LOW);<br>
+                    for (pos = 270; pos >= 0; pos -= 1) {<br>
+                    servo.write(pos);<br>
+                    delay(10);<br>
+                    }<br>
+                  }<br>
+                      
+                  }<br>
+              else<br>
+                  {<br>
+                      Serial.print("Access denied, UID:");<br>
+        
+                      for (int i = 0; i < rfid.uid.size; i++) {<br>
+                        Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");<br>
+                        Serial.print(rfid.uid.uidByte[i], HEX);<br>
+                      }<br>
+                      Serial.println();<br>
+                  }<br>
+             rfid.PICC_HaltA(); // halt PICC<br>
+              rfid.PCD_StopCrypto1(); // stop encryption on PCD<br>
+                  }<br>
+          } <br>
+        }<br>
+        
+</code>
+<p>For prepared slides (https://docs.google.com/presentation/d/1Lw0RQpA8CPZFVnlEcq3nxngfji6b6lySrrMzr-tpO38/edit?usp=sharing)</p>
+
