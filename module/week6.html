@@ -12,3 +12,188 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet">
 </head>
 
+<h1>INTERNET PROTOCOL</h1>
+<P>Internet is unique identifier to the device over the internet.</P>
+<p>Helps the internet to identify different types of routers,computers and websites.Types of interne protocols are TCP/IP(Transmission Control Protocol/ Internet Protocol)
+    SMTP(Simple Mail Transfer Protocol),
+    PPP(Point-to-Point Protocol),
+    FTP (File Transfer Protocol),
+    SFTP(Secure File Transfer Protocol),
+    HTTP(Hyper Text Transfer Protocol),
+    HTTPS(HyperText Transfer Protocol Secure),
+    TELNET(Terminal Network),
+    POP3(Post Office Protocol 3),
+    IPv4,
+    IPv6,
+    ICMP,
+    UDP,
+    IMAP,
+   and  SSH,</p>
+<h2>OSI </h2>
+<p>Open System Interconnection has seven layer the data is trasmitted.</p>
+<p>1.Physical layer-this layer deals with the actual hardware aspect. When receiving data, this layer will get the signal received and convert it into 0s and 1s and send them to the Data Link layer, which will put the frame back together.  </p>
+<p>2.Data Link Layer (DLL)-The main function of this layer is to make sure data transfer is error-free from one node to another, over the physical layer.The Data Link Layer is divided into two sublayers:  Logical Link Control (LLC),Media Access Control (MAC).</p>
+<p>3.Network Layer –  It also takes care of packet routing i.e. selection of the shortest path to transmit the packet, from the number of routes available.Function of the network layer is to route the network layer protocols determine which route is suitable from source to destination. This function of the network layer is known as routing.</p> 
+<p>4.Transport Layer – The data in the transport layer is referred to as Segments.The transport layer receives the formatted data from the upper layers, performs Segmentation, and also implements Flow & Error control to ensure proper data transmission.</p>
+<p>5.Session Layer –This layer is responsible for the establishment of connection, maintenance of sessions, and authentication, and also ensures security.</p>
+<p>6.Presentation Layer –The data from the application layer is extracted here and manipulated as per the required format to transmit over the network. </p>
+<p>7.Application Layer –also knonwn as Desktop Layer.Helps in identifying the client and synchronizing communication.</p>
+
+<h3>TCIP/IP</h3>
+<p>Transmission Control Protocal-The main condition of this process is to make data reliable and accurate so that the receiver will receive the same information which is sent by the sender.Has 4 layers.</p>
+<p>1.Application Layer- consists of HTTP,HTTPS,TELNET AND NTP.</h>
+<p>2.Transport Layer -The TCP/IP transport layer protocols exchange data receipt acknowledgments and retransmit missing packets to ensure that packets arrive in order and without error.</h>
+<p>3.Data Link Layer-Error prevention and “framing” are also provided by the data-link layer.</p>
+<P>4.Physical Layer- It acts on behalf of the sender and the Network Access layer on the behalf of the receiver.</P>
+
+<h4>For this module the assignment was to try and use ESP32CAM.</h4>
+<p>Advanced esp32wroom this has image tracking and recognition.Using port A- Thinker ESP32CAM. </p>
+<img src="../media/images/esp32cam.jfif" alt="esp32cam" length="140" width="142">
+<code><br>
+  #include "esp_camera.h"<br>
+    #include <WiFi.h><br>
+    #define CAMERA_MODEL_AI_THINKER<br>
+    #include "camera_pins.h"<br>
+    const char* ssid = "Gearbox Members";<br>
+const char* password = "xxxxxxxxxx";<br>
+
+void startCameraServer();<br>
+void setupLedFlash(int pin);<br>
+
+void setup() {<br>
+  Serial.begin(115200);<br>
+  Serial.setDebugOutput(true);<br>
+  Serial.println();<br>
+
+  camera_config_t config;<br>
+  config.ledc_channel = LEDC_CHANNEL_0;<br>
+  config.ledc_timer = LEDC_TIMER_0;<br>
+  config.pin_d0 = Y2_GPIO_NUM;<br>
+  config.pin_d1 = Y3_GPIO_NUM;<br>
+  config.pin_d2 = Y4_GPIO_NUM;<br>
+  config.pin_d3 = Y5_GPIO_NUM;<br>
+  config.pin_d4 = Y6_GPIO_NUM;<br>
+  config.pin_d5 = Y7_GPIO_NUM;<br>
+  config.pin_d6 = Y8_GPIO_NUM;<br>
+  config.pin_d7 = Y9_GPIO_NUM;<br>
+  config.pin_xclk = XCLK_GPIO_NUM;<br>
+  config.pin_pclk = PCLK_GPIO_NUM;<br>
+  config.pin_vsync = VSYNC_GPIO_NUM;<br>
+  config.pin_href = HREF_GPIO_NUM;<br>
+  config.pin_sccb_sda = SIOD_GPIO_NUM;<br>
+  config.pin_sccb_scl = SIOC_GPIO_NUM;<br>
+  config.pin_reset = RESET_GPIO_NUM;<br>
+  config.xclk_freq_hz = 20000000;<br>
+  config.frame_size = FRAMESIZE_UXGA;<br>
+  config.pixel_format = PIXFORMAT_JPEG; // for streaming<br>
+  //config.pixel_format = PIXFORMAT_RGB565; // for face detection/recognition<br>
+  config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;<br>
+  config.fb_location = CAMERA_FB_IN_PSRAM;<br>
+  config.jpeg_quality = 12;<br>
+  config.fb_count = 1;<br>
+  
+  // if PSRAM IC present, init with UXGA resolution and higher JPEG quality<br>
+  //                      for larger pre-allocated frame buffer.<br>
+  if(config.pixel_format == PIXFORMAT_JPEG){<br>
+    if(psramFound()){<br>
+      config.jpeg_quality = 10;<br>
+      config.fb_count = 2;<br>
+      config.grab_mode = CAMERA_GRAB_LATEST;<br>
+    } else {<br>
+      // Limit the frame size when PSRAM is not available
+      config.frame_size = FRAMESIZE_SVGA;<br>
+      config.fb_location = CAMERA_FB_IN_DRAM;<br>
+    }<br>
+  } else {<br>
+    // Best option for face detection/recognition<br>
+    config.frame_size = FRAMESIZE_240X240;<br>
+#if CONFIG_IDF_TARGET_ESP32S3<br>
+    config.fb_count = 2;<br>
+#endif<br>
+  }<br>
+
+#if defined(CAMERA_MODEL_ESP_EYE)<br>
+  pinMode(13, INPUT_PULLUP);<br>
+  pinMode(14, INPUT_PULLUP);<br>
+#endif<br>
+
+  // camera init<br>
+  esp_err_t err = esp_camera_init(&config);<br>
+  if (err != ESP_OK) {<br>
+    Serial.printf("Camera init failed with error 0x%x", err);<br>
+    return;<br>
+  }<br>
+
+  sensor_t * s = esp_camera_sensor_get();<br>
+  // initial sensors are flipped vertically and colors are a bit saturated<br>
+  if (s->id.PID == OV3660_PID) {<br>
+    s->set_vflip(s, 1); // flip it back<br>
+    s->set_brightness(s, 1); // up the brightness just a bit<br>
+    s->set_saturation(s, -2); // lower the saturation<br>
+  }<br>
+  // drop down frame size for higher initial frame rate<br>
+  if(config.pixel_format == PIXFORMAT_JPEG<br>
+    s->set_framesize(s, FRAMESIZE_QVGA);<br>
+  }<br>
+
+#if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)<br>
+  s->set_vflip(s, 1);<br>
+  s->set_hmirror(s, 1);<br>
+#endif<br>
+
+#if defined(CAMERA_MODEL_ESP32S3_EYE)<br>
+  s->set_vflip(s, 1);<br>
+#endif<br>
+
+// Setup LED FLash if LED pin is defined in camera_pins.h<br>
+#if defined(LED_GPIO_NUM)<br>
+  setupLedFlash(LED_GPIO_NUM);<br>
+#endif<br>
+
+  WiFi.begin(ssid, password);<br>
+  WiFi.setSleep(false);<br>
+
+  while (WiFi.status() != WL_CONNECTED) {<br>
+    delay(500);<br>
+    Serial.print(".");<br>
+  }<br>
+  Serial.println("");<br>
+  Serial.println("WiFi connected");<br>
+
+  startCameraServer();<br>
+
+  Serial.print("Camera Ready! Use 'http://");<br>
+  Serial.print(WiFi.localIP());<br>
+  Serial.println("' to connect");<br>
+}
+
+void loop() {<br>
+  // Do nothing. Everything is done in another task by the web server<br>
+  delay(10000);<br>
+}<br>
+</code>
+<img src="../media/images/doc.esp32cam.jpg" alt="esp32cam" length="140" width="142">
+
+<h5>CLOSED CIRCUIT TELEVISION(CCTV)</h5>
+<P>The cctv operates on a closed loop this means it gives feedback.</P>
+
+<h5>Elements</h5>
+<P>Camera -Captures the video footage and its the hearts.</P>
+<p>Lens -determines the field of view and focal length.</p>
+<p>Image sensor -has metal oxide semiconductor that converts light into electrical signals to create video.</p> 
+<p>Recording video -this stores recorded footage like NVR $ DVR.</p>
+
+<h5>TYPES OF CAMERAS</h5>
+<p>Dome cameras ,Bullet cameras,PTZ cameras and Day/Night cameras</p>
+<p>All theis camers are supposed to be installed Front door,Back door and First floor.</p>
+
+<h5>IP CAMERA INSTALLATION</h5>
+<P>For setup Cat 5,Cat 6 cables are used for large amount of data required by digital and high resolution over long distances.For you to obtain the IP address for the camera ,Wi-Fi must be setup to get the IP address.</P>
+<p>Network Video Recorder-Allows you to record and store clips on a hard drive and transmit them to the computer and connected to the same IP address.</p>
+<p>NVR maintains high quality videos even in long distances also used to stream in real-time and more compatible with digital cameras.Security footage is staored for 30 days this requires atleast 8 Terabyte ana stored in the cloud.</p>
+<video width="320" height="240" controls>
+  <source src="../media/videos/IPcamera.mp4" type="video/mp4" alt="IP camera" length="140" width="142">
+  Your browser does not support the video tag.
+</video>
+<h5>HD CAMERA</h5>
+<P>High quality cameras are analog camera that have (720-1080p) resolution and uses DVR OR NVR to store thge footage.</P>
